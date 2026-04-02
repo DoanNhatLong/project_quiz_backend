@@ -1,0 +1,67 @@
+HELP.md
+.env
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Node/Frontend rác
+node_modules/
+
+# IDE rác
+.idea/
+*.iml
+out/
+
+# Sensitive data
+application-local.properties
+
+# Others
+data-model-snapshot.json
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# Custom Sensitive Data
+.env
+*.env
+application-local.properties
+application-dev.properties
+
+# Logs and Temp
+logs/
+*.log
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
