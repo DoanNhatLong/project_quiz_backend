@@ -1,12 +1,11 @@
-# Bước 1: Build file jar bằng Gradle
+# Bước 1: Giữ nguyên phần Build (nếu nó đã chạy qua được bước này)
 FROM gradle:8.5-jdk17 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-# Chạy lệnh build để tạo file .jar
 RUN ./gradlew build -x test
 
-# Bước 2: Chạy ứng dụng bằng JDK 17
-FROM openjdk:17-jdk-slim
+# Bước 2: THAY ĐỔI Ở ĐÂY - Dùng Amazon Corretto thay cho OpenJDK
+FROM amazoncorretto:17-alpine-jdk
 WORKDIR /app
 EXPOSE 8080
 # Copy file jar từ bước build sang
