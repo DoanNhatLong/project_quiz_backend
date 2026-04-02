@@ -30,7 +30,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'me.paulschwarz:dotenv-render:1.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework:spring-messaging'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
