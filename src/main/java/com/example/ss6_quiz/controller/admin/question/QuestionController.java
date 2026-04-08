@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.controller.admin.question;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.QuestionsRequestDto;
 import com.example.ss6_quiz.dto.QuestionsResponseDto;
 import com.example.ss6_quiz.entity.Questions;
@@ -29,6 +30,7 @@ public class QuestionController {
     public QuestionsResponseDto createQuestion(@RequestBody QuestionsRequestDto dto) {
         return questionsService.create(dto);
     }
+
 
     @PutMapping("/{id}")
     public QuestionsResponseDto updateQuestion(@PathVariable Long id, @RequestBody QuestionsRequestDto dto) {

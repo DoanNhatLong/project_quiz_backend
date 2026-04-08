@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.controller.users;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.QuestionUploadDto;
 import com.example.ss6_quiz.dto.QuestionsRequestDto;
 import com.example.ss6_quiz.dto.QuestionsResponseDto;
@@ -42,6 +43,7 @@ public class QuestionsController {
         return ResponseEntity.ok(questionsService.getByQuizId(quizId));
     }
 
+
     @GetMapping("/{id}")
     public ResponseEntity<QuestionsResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(questionsService.getById(id));
@@ -64,6 +66,7 @@ public class QuestionsController {
         questionsService.saveFull(id, dto);
     }
 
+    @AdminActionLog(action = "delete_question")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         questionsService.delete(id);

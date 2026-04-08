@@ -1,67 +1,51 @@
-HELP.md
-.env
+# --- Build & Runtime ---
 .gradle
 build/
+bin/
+out/
+target/
+node_modules/
+.npm
+.eslintcache
+
+# --- Wrapper (Cần giữ để chạy gradle/npm mà không cần cài máy) ---
 !gradle/wrapper/gradle-wrapper.jar
 
-# Node/Frontend rác
-node_modules/
-
-# IDE rác
+# --- IDEs & Tools ---
 .idea/
+.vscode/
 *.iml
-out/
-
-# Sensitive data
-application-local.properties
-
-# Others
-data-model-snapshot.json
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
 *.iws
-*.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-### NetBeans ###
+.classpath
+.project
+.settings/
+.factorypath
+.apt_generated/
+.sts4-cache/
 /nbproject/private/
 /nbbuild/
 /dist/
-/nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-
-# Custom Sensitive Data
+# --- SENSITIVE DATA (QUAN TRỌNG) ---
 .env
 *.env
+note.env
 application-local.properties
 application-dev.properties
+application-*.properties
+application-*.yml
+# Chặn luôn file snapshot dữ liệu nếu nó chứa data thật của người dùng
+data-model-snapshot.json
 
-# Logs and Temp
+# --- Logs & OS ---
 logs/
 *.log
 tmp/
-
-# OS files
 .DS_Store
 Thumbs.db
+
+# --- Documentation ---
+# Mở lại HELP.md để xem hướng dẫn
+# HELP.md

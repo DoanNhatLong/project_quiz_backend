@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.service;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.QuestionUploadDto;
 import com.example.ss6_quiz.dto.QuestionsRequestDto;
 import com.example.ss6_quiz.dto.QuestionsResponseDto;
@@ -69,6 +70,7 @@ public class QuestionsService implements IQuestionsService {
         return toDTO(questionsRepository.save(q));
     }
 
+    @AdminActionLog(action = "edit_question")
     @Override
     public QuestionsResponseDto update(Long id, QuestionsRequestDto dto) {
         Questions q = questionsRepository.findById(id)

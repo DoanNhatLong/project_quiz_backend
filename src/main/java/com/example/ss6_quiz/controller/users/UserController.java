@@ -5,6 +5,8 @@ import com.example.ss6_quiz.dto.UserSystemDto;
 import com.example.ss6_quiz.entity.ExamAttempts;
 import com.example.ss6_quiz.entity.Users;
 import com.example.ss6_quiz.projection.ChallengerResultProjection;
+import com.example.ss6_quiz.projection.ExamAttemptProjection;
+import com.example.ss6_quiz.projection.ExamReviewProjection;
 import com.example.ss6_quiz.service.IExamAttemptsService;
 import com.example.ss6_quiz.service.IExamSnapshotService;
 import com.example.ss6_quiz.service.IUsersService;
@@ -115,7 +117,7 @@ public class UserController {
     }
 
     @GetMapping("challenges/{userId}")
-    public ResponseEntity<List<ExamAttempts>> getUserChallenges(@PathVariable Long userId) {
+    public ResponseEntity<List<ExamReviewProjection>> getUserChallenges(@PathVariable Long userId) {
         return ResponseEntity.ok(examAttemptsService.findAllByUser_Id(userId));
     }
 
@@ -135,4 +137,11 @@ public class UserController {
         return snapshotData.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Snapshot not found"));
     }
+
+    @GetMapping("attempt/{attemptId}")
+    public ResponseEntity<Optional<ExamAttemptProjection>> getDetail(@PathVariable Long attemptId) {
+        return ResponseEntity.ok(examAttemptsService.findAttemptById(attemptId));
+    }
+
+
 }

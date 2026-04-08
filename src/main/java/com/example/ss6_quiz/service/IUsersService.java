@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUsersService {
     List<Users> getAllUsers();
@@ -19,4 +20,5 @@ public interface IUsersService {
     List<UserSystemDto> findAllUserSystemDto();
     Page<Users> findAllUsers(Pageable pageable, String username);
     void addXp (Long quizAttemptsId, Integer xp);
+    Optional<Users> findByUsername(String username);
 }

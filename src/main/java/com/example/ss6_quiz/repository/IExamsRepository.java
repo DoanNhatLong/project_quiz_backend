@@ -18,4 +18,7 @@ public interface IExamsRepository extends JpaRepository<Exams,Long> {
                    "JOIN answers a ON q.id = a.question_id where e.id = :examId",
             nativeQuery = true)
     List<ExamQuestionProjection> findAllExamQuestionsNative(@Param("examId") Long examId);
+
+    @Query("SELECT e.durationMinutes FROM Exams e WHERE e.id = :examId")
+    Integer findDurationByExamId(@Param("examId") Long examId);
 }

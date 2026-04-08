@@ -16,4 +16,8 @@ public interface IChallengesService {
     ChallengesDetailProjection getChallengeByIdUser(Long challengeId);
     List<ChallengesDetailProjection> findChallengeDetail();
     Challenges getChallengeById(Long challengeId);
+
+    int startChallengeIfTimeReached(Long id);
+
+    List<Challenges> findAllByUserId(Long userId);
 }

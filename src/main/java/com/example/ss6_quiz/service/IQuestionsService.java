@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.service;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.QuestionUploadDto;
 import com.example.ss6_quiz.dto.QuestionsRequestDto;
 import com.example.ss6_quiz.dto.QuestionsResponseDto;
@@ -14,6 +15,7 @@ public interface IQuestionsService {
     List<QuestionsResponseDto> getByQuizId(Long quizId);
     QuestionsResponseDto getById(Long id);
     QuestionsResponseDto create(QuestionsRequestDto dto);
+
     QuestionsResponseDto update(Long id, QuestionsRequestDto dto);
     void delete(Long id);
     List<Questions> findRandom10ByQuizId(Long quizId);

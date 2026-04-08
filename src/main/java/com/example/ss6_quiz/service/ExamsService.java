@@ -107,4 +107,9 @@ public class ExamsService implements IExamService {
         }
     }
 
+    @Override
+    public Integer findDurationByExamId(Long examId) {
+        return examsRepository.findDurationByExamId(examId);
+    }
+
 }

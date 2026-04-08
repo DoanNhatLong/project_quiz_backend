@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.config;
 
+import com.example.ss6_quiz.service.IUsersService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -7,6 +8,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +25,13 @@ import java.util.Date;
 import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Autowired
+    @Lazy
+    IUsersService usersService;
+
+    @Autowired
+    @Lazy
+    StringRedisTemplate stringRedisTemplate;
 
     // Chuỗi bí mật dùng để ký và giải mã Token
     private final String JWT_SECRET = "DayLaChuoiBiMatSieuCapVipProCuaDuAnQuiz123456789";
@@ -57,6 +68,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Kiểm tra thẻ và soi chữ ký
             if (StringUtils.hasText(jwt) && validateToken(jwt)) {
                 String username = getUsernameFromJWT(jwt);
+                var userOptional = usersService.findByUsername(username);
+
+                if (userOptional.isPresent()) {
+                    var user = userOptional.get();
+                    String redisKey = "auth:user:" + user.getId();
+                    String activeToken = stringRedisTemplate.opsForValue().get(redisKey);
+
+                    if (activeToken != null && !activeToken.equals(jwt)) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.getWriter().write("{\"message\": \"Tài khoản đã đăng nhập ở thiết bị khác!\"}");
+                        return;
+                    }
+                }
                 String role = getRoleFromJWT(jwt);
 
                 List<SimpleGrantedAuthority> authorities = List.of(
@@ -67,8 +92,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Ghi nhận User vào hệ thống
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {

@@ -2,6 +2,7 @@ package com.example.ss6_quiz.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLRestriction("is_deleted = false")
 public class Reports {
 
     @Id
@@ -34,4 +36,6 @@ public class Reports {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    boolean isDeleted = false;
 }

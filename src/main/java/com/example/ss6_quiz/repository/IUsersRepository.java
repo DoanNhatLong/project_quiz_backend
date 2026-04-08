@@ -24,8 +24,10 @@ public interface IUsersRepository extends JpaRepository<Users, Long> {
     List<UserSystemDto> findAllUserSystemDto();
     @Query("SELECT u FROM Users u WHERE " +
            "(:username IS NULL OR :username = '' OR LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))) " +
-           "AND u.roles.id = 1 ")
+           "AND u.roles.id IN (1, 2)")
     Page<Users> findAllUsersByRoleUser(@Param("username") String username, Pageable pageable);
     @Query("SELECT u FROM Users u WHERE u.id = (SELECT ua.user.id FROM QuizAttempts ua WHERE ua.id = :quizAttemptsId)")
     Users findByQuizAttemptsId(Long quizAttemptsId);
+
+
 }

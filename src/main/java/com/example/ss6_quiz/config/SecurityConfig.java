@@ -63,7 +63,10 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "https://doannhatlong.github.io"
+                "https://doannhatlong.github.io",
+                "http://192.168.1.6:5173",
+                "http://192.168.1.6",
+                "http://192.168.1.190:5173"
         ));
 
         // 2. Phải liệt kê cụ thể Methods

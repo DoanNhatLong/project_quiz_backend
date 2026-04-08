@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.controller.admin;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.ChallengesRequestDto;
 import com.example.ss6_quiz.entity.Challenges;
 import com.example.ss6_quiz.entity.Questions;
@@ -25,6 +26,7 @@ public class ChallengeController {
     @Autowired
     private IExamService examService;
 
+    @AdminActionLog(action = "create_exam")
     @PostMapping("/create")
     public ResponseEntity<?> createChallenge(@RequestBody ChallengesRequestDto challenge) {
         try {
@@ -55,6 +57,11 @@ public class ChallengeController {
     public ResponseEntity<Challenges> getChallengeById(@PathVariable Long challengeId) {
         Challenges challenge = challengesService.getChallengeById(challengeId);
         return ResponseEntity.ok(challenge);
+    }
+
+    @GetMapping("/check/{userId}")
+    public List<Challenges> checkExam(@PathVariable Long userId){
+        return challengesService.findAllByUserId(userId);
     }
 
 }

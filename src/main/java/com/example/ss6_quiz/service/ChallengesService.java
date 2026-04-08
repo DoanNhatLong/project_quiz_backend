@@ -6,6 +6,7 @@ import com.example.ss6_quiz.entity.Challenges;
 import com.example.ss6_quiz.entity.Exams;
 import com.example.ss6_quiz.entity.Users;
 import com.example.ss6_quiz.projection.ChallengesDetailProjection;
+import com.example.ss6_quiz.redis.RedisRateLimitService;
 import com.example.ss6_quiz.repository.IChallengeParticipantRepository;
 import com.example.ss6_quiz.repository.IChallengeRepository;
 import com.example.ss6_quiz.repository.IExamsRepository;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ChallengesService implements IChallengesService {
@@ -28,6 +28,8 @@ public class ChallengesService implements IChallengesService {
     private IUsersRepository userRepository;
     @Autowired
     private IExamsRepository examRepository;
+    @Autowired
+    RedisRateLimitService redisRateLimitService;
 
     @Override
     @Transactional
@@ -38,6 +40,9 @@ public class ChallengesService implements IChallengesService {
         Users user = userRepository.findById(dto.userId())
                 .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại với ID: " + dto.userId()));
 
+        if (!redisRateLimitService.canCreateExam(user.getId())) {
+            throw new RuntimeException("Hôm nay bạn đã hết lượt tạo phòng thi (Tối đa 3 lần/ngày)!");
+        }
         Challenges challenge = new Challenges();
         challenge.setTitle(dto.title());
         challenge.setAccessCode(dto.accessCode());
@@ -115,5 +120,15 @@ public class ChallengesService implements IChallengesService {
     @Override
     public List<ChallengesDetailProjection> findChallengeDetail() {
         return challengeRepository.findChallengeDetail();
+    }
+
+    @Override
+    public int startChallengeIfTimeReached(Long id){
+        return challengeRepository.startChallengeIfTimeReached(id);
+    }
+
+    @Override
+    public List<Challenges> findAllByUserId(Long userId){
+        return challengeRepository.findAllByUserId(userId);
     }
 }

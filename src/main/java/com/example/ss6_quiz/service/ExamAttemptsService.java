@@ -1,9 +1,7 @@
 package com.example.ss6_quiz.service;
 
 import com.example.ss6_quiz.entity.ExamAttempts;
-import com.example.ss6_quiz.projection.AnswerResponseProjection;
-import com.example.ss6_quiz.projection.ChallengerResultProjection;
-import com.example.ss6_quiz.projection.ExamGradingProjection;
+import com.example.ss6_quiz.projection.*;
 import com.example.ss6_quiz.repository.IExamAttemptAnswerRepository;
 import com.example.ss6_quiz.repository.IExamAttemptsRepository;
 import com.example.ss6_quiz.repository.IExamsRepository;
@@ -35,7 +33,7 @@ public class ExamAttemptsService implements IExamAttemptsService {
             ExamAttempts attempt = existingAttempt.get();
             System.out.println(attempt.getStatus());
             if ("COMPLETED".equals(attempt.getStatus())) {
-                throw new RuntimeException("Bạn đã nộp bài thi này rồi, không thể thi lại!");
+                throw new RuntimeException("Bạn đã nộp bài thi này rồi, không thể thi lại! 77");
             }
 
             return attempt;
@@ -53,7 +51,7 @@ public class ExamAttemptsService implements IExamAttemptsService {
     }
 
     @Override
-    public List<ExamAttempts> findAllByUser_Id(Long userId) {
+    public List<ExamReviewProjection> findAllByUser_Id(Long userId) {
         return examAttemptsRepository.findAllByUser_Id(userId);
     }
 
@@ -91,5 +89,15 @@ public class ExamAttemptsService implements IExamAttemptsService {
     @Override
     public ExamAttempts findByIdAndStatus(Long id) {
         return examAttemptsRepository.findByIdAndStatus(id, "COMPLETED");
+    }
+
+    @Override
+    public Optional<ExamAttemptProjection> findAttemptById(Long id) {
+        return examAttemptsRepository.findAttemptById(id);
+    }
+
+    @Override
+    public List<ExamDetailProjection> findExamDetail(Long examId){
+        return examAttemptsRepository.findExamDetail(examId);
     }
 }

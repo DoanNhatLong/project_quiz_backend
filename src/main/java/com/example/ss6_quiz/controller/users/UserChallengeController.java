@@ -8,10 +8,7 @@ import com.example.ss6_quiz.entity.ExamAttempts;
 import com.example.ss6_quiz.projection.AnswerResponseProjection;
 import com.example.ss6_quiz.projection.ChallengesDetailProjection;
 import com.example.ss6_quiz.projection.ExamQuestionProjection;
-import com.example.ss6_quiz.service.IChallengesService;
-import com.example.ss6_quiz.service.IExamAttemptsService;
-import com.example.ss6_quiz.service.IExamService;
-import com.example.ss6_quiz.service.IExamSnapshotService;
+import com.example.ss6_quiz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +33,9 @@ public class UserChallengeController {
     private IExamSnapshotService examSnapshotService;
     @Autowired
     private IExamAttemptsService examAttemptsService;
+    @Autowired
+    private ExamTimerService examTimerService;
+
 
     @GetMapping("/waiting")
     public ResponseEntity<List<Challenges>> getWaitingChallenges() {
@@ -96,11 +96,17 @@ public class UserChallengeController {
         return ResponseEntity.ok(challengeDetail);
     }
 
-    @PostMapping("/attempts")
-    public ExamAttempts createAttempt(@RequestBody Map<String, String> payload) {
-        Long examId = Long.valueOf(payload.get("examId"));
-        Long userId = Long.valueOf(payload.get("userId"));
-        return examAttemptsService.createExamAttempt(examId, userId);
+    @PostMapping("/attempts/{examId}/{userId}/{challengeId}")
+    public ExamAttempts createAttempt(
+            @PathVariable Long examId,
+            @PathVariable Long userId,
+            @PathVariable Long challengeId
+    ) {
+        ExamAttempts attempt = examAttemptsService.createExamAttempt(examId, userId);
+        Integer duration = attempt.getExams().getDurationMinutes();
+        examTimerService.startExamTimer(attempt.getId().toString(), duration);
+//        challengesService.startChallengeIfTimeReached(challengeId);
+        return attempt;
 
     }
 

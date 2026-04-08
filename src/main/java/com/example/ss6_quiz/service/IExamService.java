@@ -7,6 +7,7 @@ import com.example.ss6_quiz.entity.Questions;
 import com.example.ss6_quiz.projection.ExamQuestionProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface IExamService {
     List<ExamQuestionProjection> getAllExamQuestions(Long examId);
 
     void createTempExam(TempExamRequestDto payload);
+
+    Integer findDurationByExamId(@Param("examId") Long examId);
 }

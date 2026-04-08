@@ -1,5 +1,6 @@
 package com.example.ss6_quiz.controller.admin;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.ExamRequestDto;
 import com.example.ss6_quiz.entity.Exams;
 import com.example.ss6_quiz.entity.Questions;
@@ -20,6 +21,7 @@ public class ExamController {
     @Autowired
     private IExamService examService;
 
+    @AdminActionLog (action = "create_exam")
     @PostMapping("/create")
     public ResponseEntity<?> createExam(@RequestBody ExamRequestDto dto) {
         try {

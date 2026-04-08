@@ -1,20 +1,22 @@
 package com.example.ss6_quiz.service;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.dto.UserSystemDto;
 import com.example.ss6_quiz.entity.Roles;
 import com.example.ss6_quiz.entity.Users;
 import com.example.ss6_quiz.repository.IRolesRepository;
 import com.example.ss6_quiz.repository.IUsersRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsersService implements IUsersService {
@@ -25,7 +27,14 @@ public class UsersService implements IUsersService {
     private IRolesRepository rolesRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 
     @Override
     public List<Users> getAllUsers() {
@@ -53,6 +62,7 @@ public class UsersService implements IUsersService {
         return usersRepository.save(user);
     }
 
+    @AdminActionLog (action = "auth_login")
     @Override
     public void deleteUser(Long id) {
         Users user = getUserById(id);
@@ -62,6 +72,12 @@ public class UsersService implements IUsersService {
 
     @Override
     public void registerUser(Users user) {
+        String clientIp = request.getRemoteAddr();
+        System.out.println(clientIp);
+        String redisKey = "register:limit:ip:" + clientIp;
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(redisKey))) {
+            throw new RuntimeException("Mỗi thiết bị chỉ được phép đăng ký một tài khoản!");
+        }
         if (usersRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
@@ -80,6 +96,14 @@ public class UsersService implements IUsersService {
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
         user.setRoles(userRole);
         usersRepository.save(user);
+//        String otp = String.valueOf((int)((Math.random() * 900000) + 100000));
+//
+//        try {
+//            emailService.sendOtpEmail(user.getEmail(), otp);
+//        } catch (Exception e) {
+//            System.err.println("Lỗi gửi mail: " + e.getMessage());
+//        }
+        stringRedisTemplate.opsForValue().set(redisKey, "registered");
     }
 
     @Override
@@ -114,5 +138,10 @@ public class UsersService implements IUsersService {
         Users user = usersRepository.findByQuizAttemptsId(quizAttemptsId);
         user.setXp(user.getXp() + xp);
         usersRepository.save(user);
+    }
+
+    @Override
+    public Optional<Users> findByUsername(String username) {
+        return usersRepository.findByUsername(username);
     }
 }

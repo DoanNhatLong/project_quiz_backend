@@ -1,10 +1,12 @@
 package com.example.ss6_quiz.controller;
 
+import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.config.JwtAuthenticationFilter;
 import com.example.ss6_quiz.entity.Users;
 import com.example.ss6_quiz.repository.IUsersRepository;
 import com.example.ss6_quiz.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -21,6 +23,8 @@ public class AuthController {
     private IUsersService usersService;
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @GetMapping("/me")
     public ResponseEntity<?> getMe() {
@@ -43,6 +47,8 @@ public class AuthController {
                 )))
                 .orElse(ResponseEntity.status(404).build());
     }
+
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody Users user) {
         try {
@@ -60,6 +66,9 @@ public class AuthController {
         try {
             Users user = usersService.login(username, password);
             String token = jwtAuthenticationFilter.generateToken(user.getUsername(), user.getRoles().getName());
+            String redisKey = "auth:user:" + user.getId();
+            // Lưu Token này với thời gian sống 24h (bằng với thời gian JWT của bạn)
+            stringRedisTemplate.opsForValue().set(redisKey, token, java.time.Duration.ofHours(24));
             return ResponseEntity.ok(Map.of(
                     "token", token,
                     "tokenType", "Bearer",
