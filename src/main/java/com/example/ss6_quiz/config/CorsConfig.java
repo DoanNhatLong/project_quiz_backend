@@ -12,6 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins(
                         "http://localhost:5173",
                         "https://doannhatlong.github.io",
+                        "https://project-quiz-frontend.vercel.app",
                         "http://192.168.1.6:5173",
                         "http://192.168.1.190:5173"
                 )

@@ -1,0 +1,36 @@
+services:
+  # --- 1. Máy ảo Backend của bạn ---
+  app:
+    build: . # Bảo Docker nhìn vào Dockerfile để xây dựng
+    container_name: quiz-backend
+    ports:
+      - "8080:8080" # Map cổng máy thật 8080 vào máy ảo 8080
+    environment: # Truyền các biến vào đây
+      - DB_URL=jdbc:mysql://db:3306/ss6_project_quiz2
+      - REDIS_HOST=redis
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    depends_on: # Đợi DB và Redis lên trước rồi App mới lên sau
+      - db
+      - redis
+
+  # --- 2. Máy ảo MySQL ---
+  db:
+    image: mysql:8.0
+    container_name: quiz-mysql
+    environment:
+      MYSQL_DATABASE: ss6_project_quiz2
+      MYSQL_ROOT_PASSWORD: ad1412
+    ports:
+      - "3306:3306"
+    volumes: # Lưu dữ liệu ra ổ cứng thật, tắt máy không mất data
+      - mysql_data:/var/lib/mysql
+
+  # --- 3. Máy ảo Redis ---
+  redis:
+    image: redis:7.0-alpine
+    container_name: quiz-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mysql_data:

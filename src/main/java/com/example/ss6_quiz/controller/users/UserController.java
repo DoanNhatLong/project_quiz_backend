@@ -39,6 +39,7 @@ public class UserController {
     // 1. Lấy danh sách (Read)
     @GetMapping
     public List<Users> getAllUsers() {
+        System.out.println("docker");
         return usersService.getAllUsers();
     }
 
@@ -59,7 +60,7 @@ public class UserController {
     public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users userDetails) {
         return ResponseEntity.ok(usersService.updateUser(id, userDetails));
     }
-
+    
     // 5. Xóa (Delete)
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

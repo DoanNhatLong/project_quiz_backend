@@ -64,6 +64,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "https://doannhatlong.github.io",
+                "https://project-quiz-frontend.vercel.app",
                 "http://192.168.1.6:5173",
                 "http://192.168.1.6",
                 "http://192.168.1.190:5173"

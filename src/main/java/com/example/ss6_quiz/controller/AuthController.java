@@ -1,6 +1,5 @@
 package com.example.ss6_quiz.controller;
 
-import com.example.ss6_quiz.annotation.AdminActionLog;
 import com.example.ss6_quiz.config.JwtAuthenticationFilter;
 import com.example.ss6_quiz.entity.Users;
 import com.example.ss6_quiz.repository.IUsersRepository;

@@ -1,17 +1,18 @@
-# Bước 1: Build file jar bằng Gradle
-FROM gradle:8.5-jdk17 AS build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-
-# THÊM DÒNG NÀY ĐỂ CẤP QUYỀN THỰC THI
-RUN chmod +x gradlew
-
-# Sau đó mới chạy lệnh build
-RUN ./gradlew build -x test
-
-# Bước 2: Chạy ứng dụng bằng JDK 17
-FROM amazoncorretto:17-alpine-jdk
+# B1: Dùng JDK 17 (Cái này máy ảo nào cũng chạy được)
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
+
+# B2: Copy toàn bộ dự án vào
+COPY . .
+
+# B3: Cấp quyền thực thi cho file gradlew và chạy nó để build
+# Dùng ./gradlew thay vì gradle để nó tự lấy bản chuẩn của dự án bạn
+RUN chmod +x ./gradlew
+RUN ./gradlew bootJar -x test
+
+# B4: Giai đoạn chạy (như cũ)
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-COPY --from=build /home/gradle/src/build/libs/ss6_quiz-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
