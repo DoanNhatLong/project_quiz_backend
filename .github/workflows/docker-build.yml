@@ -1,13 +1,35 @@
-name: Test CI-CD Manual
+name: Build and Push Docker Image
 on: [push]
 
 jobs:
-  test-step:
+  build-and-pack:
     runs-on: ubuntu-latest
     steps:
-      - name: Hello tu may cua Yuan
+      # 1. Lấy code từ Repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Thiết lập môi trường Java 17 (Khớp với dự án Spring của bạn)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle' # Tự động cache thư viện để lần sau build nhanh hơn
+
+      # 3. Build file JAR (Bỏ qua test để chạy cho nhanh)
+      - name: Build with Gradle
         run: |
-          echo "======================================"
-          echo "Dong nay duoc in ra tu IDE IntelliJ"
-          echo "CI/CD DANG HOAT DONG!"
-          echo "======================================"
+          chmod +x ./gradlew
+          ./gradlew bootJar -x test
+
+      # 4. Đóng gói Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build -t longnhat1357/quiz-backend:v1 .
+
+      # 5. Kiểm tra kết quả
+      - name: Verify Build
+        run: |
+          docker images | grep quiz-backend
+          echo "Hoan thanh đóng gói Image v1!"
