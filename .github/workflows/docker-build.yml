@@ -1,0 +1,13 @@
+name: Test CI-CD Manual
+on: [push]
+
+jobs:
+  test-step:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello tu may cua Yuan
+        run: |
+          echo "======================================"
+          echo "Dong nay duoc in ra tu IDE IntelliJ"
+          echo "CI/CD DANG HOAT DONG!"
+          echo "======================================"

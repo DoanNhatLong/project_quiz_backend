@@ -44,7 +44,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String token = jwtService.generateToken(user.getUsername(), user.getRoles().getName());
 
-        String targetUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
+//        String targetUrl = "http://localhost:5173/oauth2/redirect?token=" + token;
+        String targetUrl = "https://project-quiz-frontend.vercel.app/oauth2/redirect?token=" + token;
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }

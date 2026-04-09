@@ -16,7 +16,7 @@ public class ReportService implements IReportService {
     private IReportsRepository reportsRepository;
 
     @Override
-    public void saveReport(@RequestBody ReportRequestDto dto) {
+    public void saveReport(ReportRequestDto dto) {
         Reports report = new Reports();
         report.setAttemptId(dto.attemptId());
         report.setExamId(dto.examId());
@@ -24,6 +24,7 @@ public class ReportService implements IReportService {
         report.setMessage(dto.message());
         report.setStatus(dto.status());
         report.setCreatedAt(LocalDateTime.now());
+        report.setDeleted(false);
         reportsRepository.save(report);
     }
 

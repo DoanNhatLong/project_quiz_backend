@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public record ReportRequestDto(
         Long attemptId,
         Long examId,
-
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         LocalDateTime startTime,
         String message,
